@@ -121,5 +121,7 @@ def update_graph(selected_avg):
 
     return fig
 
+
 if __name__ == '__main__':
     app.run_server(debug=True)
+
