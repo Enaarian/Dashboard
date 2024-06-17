@@ -4,10 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
-
 df = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
 sleep_occ = df[["Occupation", "Sleep Duration", "Quality of Sleep"]].groupby("Occupation").mean().reset_index()
-
 
 fig = px.bar(
     sleep_occ,
@@ -18,7 +16,6 @@ fig = px.bar(
     barmode="group",
     color_discrete_sequence=["#636EFA", "#EF553B"]
 )
-
 
 fig.update_layout(
     legend_title_text='Metrik',
@@ -34,18 +31,15 @@ fig.update_layout(
     template="plotly_white"
 )
 
-
 avg_sleep_duration = sleep_occ["Sleep Duration"].mean()
 avg_quality_sleep = sleep_occ["Quality of Sleep"].mean()
 
 app = dash.Dash(__name__)
-app.layout = html.Div(children=[
-    html.H1(children='Überschrift des Dashboards'),
 
-    html.Div(children='''
-        Dies ist ein Beispiel für ein Dashboard mit Dash.
-        Sie können hier zusätzlichen Text hinzufügen, um Informationen zu präsentieren.
-    '''),
+app.layout = html.Div(children=[
+    html.H1(children='Schlaf- und Lebensstilanalyse Dashboard'),
+
+    html.H2(children='Schlafanalyse nach Berufsgruppen'),
 
     dcc.Dropdown(
         id='avg-dropdown',
@@ -60,9 +54,20 @@ app.layout = html.Div(children=[
     dcc.Graph(
         id='sleep-analysis-graph',
         figure=fig
-    )
+    ),
+
+    html.Div(children='''
+        Das Balkendiagramm zeigt die durchschnittliche Schlafdauer und Schlafqualität für verschiedene Berufsgruppen. 
+        Die x-Achse listet die Berufe, während die y-Achse die Werte für Schlafdauer (Stunden) und Schlafqualität (Skala 1-10) darstellt. 
+        Blaue Balken repräsentieren die Schlafdauer, rote Balken die Schlafqualität.
+
+        Über ein Dropdown-Menü können Durchschnittslinien für Schlafdauer und Schlafqualität ein- und ausgeblendet werden. 
+        Diese Linien helfen, Abweichungen von den Durchschnittswerten zu erkennen. 
+        Die Analyse bietet Einblicke in die Schlafgewohnheiten verschiedener Berufsgruppen und unterstützt gezielte Gesundheitsmaßnahmen.
+    ''')
 ])
 
+# Callback-Funktion zum Aktualisieren des Diagramms basierend auf Dropdown-Auswahl
 @app.callback(
     Output('sleep-analysis-graph', 'figure'),
     Input('avg-dropdown', 'value')
@@ -116,7 +121,5 @@ def update_graph(selected_avg):
 
     return fig
 
-
 if __name__ == '__main__':
     app.run_server(debug=True)
-
