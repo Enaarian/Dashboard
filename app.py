@@ -40,8 +40,7 @@ avg_quality_sleep = sleep_occ["Quality of Sleep"].mean()
 
 app = dash.Dash(__name__, external_stylesheets=[
     dbc.themes.BOOTSTRAP,
-    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css",
-    "/assets/styles.css"
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
 ])
 
 #############################################################################
@@ -59,10 +58,11 @@ app.layout = html.Div(children=[
         multi=True,
         placeholder='Durchschnittswerte auswählen',
         style={
-            'backgroundColor': '#444444',
-            'color': '#AAAAAA',
+            'backgroundColor': '#444',
+            'color': '#f6f6f6',
             'border': '1px solid #555',
         },
+        className='dcc-dropdown'
     ),
 
     dcc.Graph(
