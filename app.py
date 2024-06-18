@@ -5,7 +5,10 @@ import plotly.graph_objects as go
 import pandas as pd
 
 df = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
+
+
 sleep_occ = df[["Occupation", "Sleep Duration", "Quality of Sleep"]].groupby("Occupation").mean().reset_index()
+
 
 fig = px.bar(
     sleep_occ,
@@ -16,6 +19,7 @@ fig = px.bar(
     barmode="group",
     color_discrete_sequence=["#636EFA", "#EF553B"]
 )
+
 
 fig.update_layout(
     legend_title_text='Metrik',
@@ -31,11 +35,14 @@ fig.update_layout(
     template="plotly_white"
 )
 
+
 avg_sleep_duration = sleep_occ["Sleep Duration"].mean()
 avg_quality_sleep = sleep_occ["Quality of Sleep"].mean()
 
+
 app = dash.Dash(__name__)
 
+# Layout des Dashboards
 app.layout = html.Div(children=[
     html.H1(children='Schlaf- und Lebensstilanalyse Dashboard'),
 
@@ -64,6 +71,10 @@ app.layout = html.Div(children=[
         Über ein Dropdown-Menü können Durchschnittslinien für Schlafdauer und Schlafqualität ein- und ausgeblendet werden. 
         Diese Linien helfen, Abweichungen von den Durchschnittswerten zu erkennen. 
         Die Analyse bietet Einblicke in die Schlafgewohnheiten verschiedener Berufsgruppen und unterstützt gezielte Gesundheitsmaßnahmen.
+    '''),
+
+    html.Div(className='footer', children='''
+        Dieses Dashboard wurde erstellt, um die Schlafgewohnheiten verschiedener Berufsgruppen zu analysieren.
     ''')
 ])
 
