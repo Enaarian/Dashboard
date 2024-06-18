@@ -2,8 +2,8 @@ import dash
 from dash import dcc, html, Input, Output
 import plotly.express as px
 import plotly.graph_objects as go
-import dash_bootstrap_components as dbc
 import pandas as pd
+import dash_bootstrap_components as dbc
 
 df = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
 sleep_occ = df[["Occupation", "Sleep Duration", "Quality of Sleep"]].groupby("Occupation").mean().reset_index()
@@ -20,7 +20,6 @@ fig = px.bar(
     color_discrete_sequence=["#636EFA", "#EF553B"]
 )
 
-
 fig.update_layout(
     legend_title_text='Metrik',
     title={
@@ -35,12 +34,11 @@ fig.update_layout(
     template="plotly_white"
 )
 
-
 avg_sleep_duration = sleep_occ["Sleep Duration"].mean()
 avg_quality_sleep = sleep_occ["Quality of Sleep"].mean()
 
-
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP,
+                                                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"])
 
 #############################################################################
 app.layout = html.Div(children=[
@@ -73,13 +71,9 @@ app.layout = html.Div(children=[
         Die Analyse bietet Einblicke in die Schlafgewohnheiten verschiedener Berufsgruppen und unterstützt gezielte Gesundheitsmaßnahmen.
     '''),
 
-    dbc.Row([
-        dbc.Col([], width=2),
-        dbc.Col([
-            dbc.Row([_footer])
-        ], width=10),
-    ]),
+    _footer
 ])
+
 
 # Callback-Funktion zum Aktualisieren des Diagramms basierend auf Dropdown-Auswahl
 @app.callback(
@@ -138,4 +132,3 @@ def update_graph(selected_avg):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
