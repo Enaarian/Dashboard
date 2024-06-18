@@ -9,6 +9,7 @@ df = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
 sleep_occ = df[["Occupation", "Sleep Duration", "Quality of Sleep"]].groupby("Occupation").mean().reset_index()
 
 from assets.footer import _footer
+import assets.fig_layout as fig_layout
 
 fig = px.bar(
     sleep_occ,
@@ -20,7 +21,7 @@ fig = px.bar(
     color_discrete_sequence=["#636EFA", "#EF553B"]
 )
 
-fig.update_layout(
+fig.update_layout(fig_layout.my_figlayout,
     legend_title_text='Metrik',
     title={
         'text': "Schlafanalyse nach Beruf",
@@ -91,7 +92,7 @@ def update_graph(selected_avg):
         color_discrete_sequence=["#636EFA", "#EF553B"]
     )
 
-    fig.update_layout(
+    fig.update_layout(fig_layout.my_figlayout,
         legend_title_text='Metrik',
         title={
             'text': "Schlafanalyse nach Beruf",
