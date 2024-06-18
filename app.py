@@ -2,13 +2,13 @@ import dash
 from dash import dcc, html, Input, Output
 import plotly.express as px
 import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
 import pandas as pd
 
 df = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
-
-
 sleep_occ = df[["Occupation", "Sleep Duration", "Quality of Sleep"]].groupby("Occupation").mean().reset_index()
 
+from assets.footer import _footer
 
 fig = px.bar(
     sleep_occ,
@@ -42,7 +42,7 @@ avg_quality_sleep = sleep_occ["Quality of Sleep"].mean()
 
 app = dash.Dash(__name__)
 
-# Layout des Dashboards
+#############################################################################
 app.layout = html.Div(children=[
     html.H1(children='Schlaf- und Lebensstilanalyse Dashboard'),
 
@@ -73,9 +73,12 @@ app.layout = html.Div(children=[
         Die Analyse bietet Einblicke in die Schlafgewohnheiten verschiedener Berufsgruppen und unterstützt gezielte Gesundheitsmaßnahmen.
     '''),
 
-    html.Div(className='footer', children='''
-        Dieses Dashboard wurde erstellt, um die Schlafgewohnheiten verschiedener Berufsgruppen zu analysieren.
-    ''')
+    dbc.Row([
+        dbc.Col([], width=2),
+        dbc.Col([
+            dbc.Row([_footer])
+        ], width=10),
+    ]),
 ])
 
 # Callback-Funktion zum Aktualisieren des Diagramms basierend auf Dropdown-Auswahl
