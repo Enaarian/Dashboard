@@ -4,6 +4,57 @@ body {
     overflow-x: hidden;
     font-size: 18px;
     color: white;
+    background-color: #333;
+}
+
+
+/* Dropdown control styling */
+.dcc-dropdown {
+    background-color: #444 !important;
+    color: #f6f6f6 !important;
+    border: 1px solid #555 !important;
+}
+
+.dcc-dropdown .Select-control {
+    background-color: #444 !important;
+    border: 1px solid #555 !important;
+    color: #f6f6f6 !important;
+}
+
+.dcc-dropdown .Select-menu-outer {
+    background-color: #444 !important;
+    border: 1px solid #555 !important;
+    color: #f6f6f6 !important;
+}
+
+.dcc-dropdown .Select-option {
+    background-color: #444 !important;
+    color: #f6f6f6 !important;
+}
+
+.dcc-dropdown .Select-option:hover {
+    background-color: #555 !important;
+}
+
+.dcc-dropdown .Select-option.is-focused {
+    background-color: #555 !important;
+    color: #f6f6f6 !important;
+}
+
+.dcc-dropdown .Select-option.is-selected {
+    background-color: #666 !important;
+    color: #f6f6f6 !important;
+}
+
+/* Ensure dropdown menu itself is styled correctly */
+.dcc-dropdown .VirtualizedSelectOption {
+    background-color: #444 !important;
+    color: #f6f6f6 !important;
+}
+
+.dcc-dropdown .VirtualizedSelectFocusedOption {
+    background-color: #555 !important;
+    color: #f6f6f6 !important;
 }
 
 .footer {

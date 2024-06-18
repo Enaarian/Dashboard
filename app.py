@@ -38,8 +38,11 @@ fig.update_layout(fig_layout.my_figlayout,
 avg_sleep_duration = sleep_occ["Sleep Duration"].mean()
 avg_quality_sleep = sleep_occ["Quality of Sleep"].mean()
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP,
-                                                "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"])
+app = dash.Dash(__name__, external_stylesheets=[
+    dbc.themes.BOOTSTRAP,
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css",
+    "/assets/styles.css"
+])
 
 #############################################################################
 app.layout = html.Div(children=[
@@ -54,7 +57,12 @@ app.layout = html.Div(children=[
             {'label': 'Durchschnittliche Schlafqualität', 'value': 'avg_quality_sleep'}
         ],
         multi=True,
-        placeholder='Durchschnittswerte auswählen'
+        placeholder='Durchschnittswerte auswählen',
+        style={
+            'backgroundColor': '#444444',
+            'color': '#AAAAAA',
+            'border': '1px solid #555',
+        },
     ),
 
     dcc.Graph(
