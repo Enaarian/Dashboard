@@ -1,5 +1,5 @@
 # pages/page1.py
-from dash import html, dcc, Input, Output
+from dash import html, dcc, Input, Output, callback
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
@@ -10,6 +10,7 @@ dash.register_page(__name__, name='Sleep Analyse', title='Sleep Analyse')
 df = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
 sleep_occ = df[["Occupation", "Sleep Duration", "Quality of Sleep"]].groupby("Occupation").mean().reset_index()
 
+import assets.fig_layout as figy
 
 fig = px.bar(
     sleep_occ,
@@ -21,19 +22,19 @@ fig = px.bar(
     color_discrete_sequence=["#636EFA", "#EF553B"]
 )
 
-fig.update_layout(
-    legend_title_text='Metrik',
-    title={
-        'text': "Schlafanalyse nach Beruf",
-        'y': 0.9,
-        'x': 0.5,
-        'xanchor': 'center',
-        'yanchor': 'top'
-    },
-    xaxis_title="Beruf",
-    yaxis_title="Durchschnittswerte",
-    template="plotly_white"
-)
+fig.update_layout(figy.my_figlayout,
+                  legend_title_text='Metrik',
+                  title={
+                      'text': "Schlafanalyse nach Beruf",
+                      'y': 0.9,
+                      'x': 0.5,
+                      'xanchor': 'center',
+                      'yanchor': 'top'
+                  },
+                  xaxis_title="Beruf",
+                  yaxis_title="Durchschnittswerte",
+                  template="plotly_white"
+                  )
 
 avg_sleep_duration = sleep_occ["Sleep Duration"].mean()
 avg_quality_sleep = sleep_occ["Quality of Sleep"].mean()
@@ -70,57 +71,58 @@ layout = html.Div([
     ''')
 ])
 
+
 # Callback-Funktion zum Aktualisieren des Diagramms basierend auf Dropdown-Auswahl
-def register_callbacks(app):
-    @app.callback(
-        Output('sleep-analysis-graph', 'figure'),
-        Input('avg-dropdown', 'value')
+
+@callback(
+    Output('sleep-analysis-graph', 'figure'),
+    Input('avg-dropdown', 'value')
+)
+def update_graph(selected_avg):
+    fig = px.bar(
+        sleep_occ,
+        x="Occupation",
+        y=["Sleep Duration", "Quality of Sleep"],
+        labels={"Occupation": "Beruf", "value": "Wert", "variable": "Metrik"},
+        title="Schlafanalyse nach Beruf",
+        barmode="group",
+        color_discrete_sequence=["#636EFA", "#EF553B"]
     )
-    def update_graph(selected_avg):
-        fig = px.bar(
-            sleep_occ,
-            x="Occupation",
-            y=["Sleep Duration", "Quality of Sleep"],
-            labels={"Occupation": "Beruf", "value": "Wert", "variable": "Metrik"},
-            title="Schlafanalyse nach Beruf",
-            barmode="group",
-            color_discrete_sequence=["#636EFA", "#EF553B"]
-        )
 
-        fig.update_layout(
-            legend_title_text='Metrik',
-            title={
-                'text': "Schlafanalyse nach Beruf",
-                'y': 0.9,
-                'x': 0.5,
-                'xanchor': 'center',
-                'yanchor': 'top'
-            },
-            xaxis_title="Beruf",
-            yaxis_title="Durchschnittswerte",
-            template="plotly_white"
-        )
+    fig.update_layout(figy.my_figlayout,
+                      legend_title_text='Metrik',
+                      title={
+                          'text': "Schlafanalyse nach Beruf",
+                          'y': 0.9,
+                          'x': 0.5,
+                          'xanchor': 'center',
+                          'yanchor': 'top'
+                      },
+                      xaxis_title="Beruf",
+                      yaxis_title="Durchschnittswerte",
+                      template="plotly_white"
+                      )
 
-        if selected_avg:
-            if 'avg_sleep_duration' in selected_avg:
-                fig.add_trace(
-                    go.Scatter(
-                        x=sleep_occ["Occupation"],
-                        y=[avg_sleep_duration] * len(sleep_occ),
-                        mode="lines",
-                        name="Durchschnittliche Schlafdauer",
-                        line=dict(dash="dash", color="#636EFA")
-                    )
+    if selected_avg:
+        if 'avg_sleep_duration' in selected_avg:
+            fig.add_trace(
+                go.Scatter(
+                    x=sleep_occ["Occupation"],
+                    y=[avg_sleep_duration] * len(sleep_occ),
+                    mode="lines",
+                    name="Durchschnittliche Schlafdauer",
+                    line=dict(dash="dash", color="#636EFA")
                 )
-            if 'avg_quality_sleep' in selected_avg:
-                fig.add_trace(
-                    go.Scatter(
-                        x=sleep_occ["Occupation"],
-                        y=[avg_quality_sleep] * len(sleep_occ),
-                        mode="lines",
-                        name="Durchschnittliche Schlafqualität",
-                        line=dict(dash="dash", color="#EF553B")
-                    )
+            )
+        if 'avg_quality_sleep' in selected_avg:
+            fig.add_trace(
+                go.Scatter(
+                    x=sleep_occ["Occupation"],
+                    y=[avg_quality_sleep] * len(sleep_occ),
+                    mode="lines",
+                    name="Durchschnittliche Schlafqualität",
+                    line=dict(dash="dash", color="#EF553B")
                 )
+            )
 
-        return fig
+    return fig
