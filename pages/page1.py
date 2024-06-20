@@ -60,19 +60,22 @@ layout = html.Div([
         id='sleep-analysis-graph',
         figure=fig
     ),
-    html.Div(children='''
-        Das Balkendiagramm zeigt die durchschnittliche Schlafdauer und Schlafqualität für verschiedene Berufsgruppen. 
+    html.Div(children='''Das Balkendiagramm zeigt die durchschnittliche Schlafdauer und Schlafqualität für verschiedene Berufsgruppen. 
         Die x-Achse listet die Berufe, während die y-Achse die Werte für Schlafdauer (Stunden) und Schlafqualität (Skala 1-10) darstellt. 
         Blaue Balken repräsentieren die Schlafdauer, rote Balken die Schlafqualität.
 
         Über ein Dropdown-Menü können Durchschnittslinien für Schlafdauer und Schlafqualität ein- und ausgeblendet werden. 
         Diese Linien helfen, Abweichungen von den Durchschnittswerten zu erkennen. 
-        Die Analyse bietet Einblicke in die Schlafgewohnheiten verschiedener Berufsgruppen und unterstützt gezielte Gesundheitsmaßnahmen.
-    ''')
+        Die Analyse bietet Einblicke in die Schlafgewohnheiten verschiedener Berufsgruppen und unterstützt gezielte Gesundheitsmaßnahmen.'''),
+    html.Div(
+        [
+            dcc.Graph(id='gender-analysis-graph', style={'width': '48%', 'display': 'inline-block'}),
+            dcc.Graph(id='additional-analysis-graph', style={'width': '48%', 'display': 'inline-block'}),
+        ],
+        style={'display': 'flex', 'justify-content': 'space-between'}
+    )
 ])
 
-
-# Callback-Funktion zum Aktualisieren des Diagramms basierend auf Dropdown-Auswahl
 
 @callback(
     Output('sleep-analysis-graph', 'figure'),
@@ -126,3 +129,35 @@ def update_graph(selected_avg):
             )
 
     return fig
+
+
+@callback(
+    Output('gender-analysis-graph', 'figure'),
+    Output('gender-analysis-graph', 'style'),
+    Input('sleep-analysis-graph', 'clickData')
+)
+def display_gender_analysis(clickData):
+    if clickData is None:
+        return {}, {'display': 'none'}
+
+    occupation = clickData['points'][0]['x']
+    filtered_df = df[df['Occupation'] == occupation]
+    gender_fig = px.histogram(filtered_df, x='Gender', title=f'Geschlechterverteilung in {occupation}')
+
+    return gender_fig, {'width': '48%', 'display': 'inline-block'}
+
+
+@callback(
+    Output('additional-analysis-graph', 'figure'),
+    Output('additional-analysis-graph', 'style'),
+    Input('sleep-analysis-graph', 'clickData')
+)
+def display_additional_analysis(clickData):
+    if clickData is None:
+        return {}, {'display': 'none'}
+
+    occupation = clickData['points'][0]['x']
+    filtered_df = df[df['Occupation'] == occupation]
+    additional_fig = px.histogram(filtered_df, x='Age', title=f'Altersverteilung in {occupation}')
+
+    return additional_fig, {'width': '48%', 'display': 'inline-block'}
