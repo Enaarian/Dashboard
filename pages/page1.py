@@ -160,5 +160,7 @@ def display_additional_analysis(clickData):
     occupation = clickData['points'][0]['x']
     filtered_df = df[df['Occupation'] == occupation]
     additional_fig = px.histogram(filtered_df, x='Age', title=f'Altersverteilung in {occupation}')
-    additional_fig.update_layout(figy.my_figlayout,)
+    additional_fig.update_layout(figy.my_figlayout,
+                                 xaxis_range=[0,70],
+                                 yaxis_range=[0,70])
     return additional_fig, {'width': '48%', 'display': 'inline-block'}
