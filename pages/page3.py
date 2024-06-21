@@ -15,28 +15,31 @@ import assets.fig_layout as figy
 avg_daily_steps = df.groupby('Occupation')['Daily Steps'].mean().reset_index()
 avg_daily_steps = avg_daily_steps.sort_values(by='Daily Steps', ascending=True)
 
-fig = px.bar(
-    avg_daily_steps,
-    x='Daily Steps',
-    y='Occupation',
-    labels={'Daily Steps': 'Tägliche Schritte', 'Occupation': 'Beruf'},
-    title='Durchschnittliche tägliche Schritte nach Beruf',
-    orientation='h',
-    color_discrete_sequence=["#636EFA"]
-)
-
+fig = px.bar(avg_daily_steps,
+             x='Daily Steps',
+             y='Occupation',
+             orientation='h',
+             #title='Durchschnittliche tägliche Schritte nach Beruf',
+             labels={'Occupation': 'Beruf',
+                     'Daily Steps': 'Durchschnittliche tägliche Schritte'},
+             color='Daily Steps',
+             # Farbpalette basierend auf den täglichen Schritten
+             color_continuous_scale=px.colors.sequential.Bluered)  # Benutzerdefinierte Farbpalette
 fig.update_layout(figy.my_figlayout,
-    legend_title_text='Metrik',
-    title={
-        'text': 'Durchschnittliche tägliche Schritte nach Beruf',
-        'y': 0.9,
-        'x': 0.5,
-        'xanchor': 'center',
-        'yanchor': 'top'
-    },
+    # title={
+    #     'text': 'Durchschnittliche tägliche Schritte nach Beruf',
+    #     'y': 0.95,
+    #     'x': 0.5,
+    #     'xanchor': 'center',
+    #     'yanchor': 'top'},
     xaxis_title='Durchschnittliche tägliche Schritte',
     yaxis_title='Beruf',
-    template='plotly_white'
+    font=dict(
+        family="Arial",
+        size=12,
+        color="white"
+    ),
+    height=600   # Größe des Plots anpassen
 )
 
 avg_daily_steps_value = avg_daily_steps['Daily Steps'].mean()
@@ -83,28 +86,31 @@ layout = html.Div([
     [Input('avg-dropdown', 'value')]
 )
 def update_graph(selected_avg):
-    fig = px.bar(
-        avg_daily_steps,
-        x='Daily Steps',
-        y='Occupation',
-        labels={'Daily Steps': 'Tägliche Schritte', 'Occupation': 'Beruf'},
-        title='Durchschnittliche tägliche Schritte nach Beruf',
-        orientation='h',  # Horizontales Balkendiagramm
-        color_discrete_sequence=["#636EFA"]
-    )
-
+    fig = px.bar(avg_daily_steps,
+                 x='Daily Steps',
+                 y='Occupation',
+                 orientation='h',
+                 #title='Durchschnittliche tägliche Schritte nach Beruf',
+                 labels={'Occupation': 'Beruf',
+                         'Daily Steps': 'Durchschnittliche tägliche Schritte'},
+                 color='Daily Steps',
+                 # Farbpalette basierend auf den täglichen Schritten
+                 color_continuous_scale=px.colors.sequential.Bluered)  # Benutzerdefinierte Farbpalette
     fig.update_layout(figy.my_figlayout,
-        legend_title_text='Metrik',
-        title={
-            'text': 'Durchschnittliche tägliche Schritte nach Beruf',
-            'y': 0.9,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
+        # title={
+        #     'text': 'Durchschnittliche tägliche Schritte nach Beruf',
+        #     'y': 0.95,
+        #     'x': 0.5,
+        #     'xanchor': 'center',
+        #     'yanchor': 'top'},
         xaxis_title='Durchschnittliche tägliche Schritte',
         yaxis_title='Beruf',
-        template='plotly_white'
+        font=dict(
+            family="Arial",
+            size=12,
+            color="white"
+        ),
+        height=600  # Größe des Plots anpassen
     )
 
     if selected_avg and 'avg_daily_steps' in selected_avg:
